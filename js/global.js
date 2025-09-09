@@ -1,4 +1,34 @@
 $(document).ready(function(){
+
+  function animateOnScroll(element, animationClass) {
+        // Deixa os elementos invisíveis no início
+        $(element).addClass('animate-on-scroll');
+
+        $(window).on('scroll load', function() {
+            $(element).each(function() {
+                var elementTop = $(this).offset().top;
+                var windowBottom = $(window).scrollTop() + $(window).height();
+
+                // Quando o elemento entra na tela
+                if(windowBottom > elementTop + 50) { // 50px de folga
+                    if(!$(this).hasClass('animate__animated')) {
+                        $(this).css('opacity', 1); // torna visível
+                        $(this).addClass('animate__animated ' + animationClass);
+                    }
+                }
+            });
+        });
+    }
+  
+  animateOnScroll('.content-img-perfil', 'animate__fadeInUp');
+  animateOnScroll('.p-resume', 'animate__fadeInUp');
+  animateOnScroll('.row-data-port', 'animate__fadeInUp');
+  animateOnScroll('.exp1', 'animate__fadeInRight');
+  animateOnScroll('.exp2', 'animate__fadeInLeft');
+  animateOnScroll('.exp3', 'animate__fadeInRight');
+  animateOnScroll('.row-port', 'animate__fadeInUp');
+  animateOnScroll('.content-item-blog', 'animate__fadeInUp');
+
 	createCanv("83%",0.83,0.17, document.getElementById("canvas1"));
 	createCanv("88%",0.88,0.12, document.getElementById("canvas2"));
 	createCanv("89%",0.89,0.11, document.getElementById("canvas3"));
@@ -148,3 +178,5 @@ function createCanv(percent, decimal1, decimal2, elem){
 $(window).on('load', function () {
     $(".overlaypt").remove();
   });
+
+  

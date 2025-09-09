@@ -26,6 +26,9 @@ body {
 .theme-color-secondary-text {
   color:#333;
 }
+.animate-on-scroll {
+    opacity: 0;
+}
 .content-header-nav{
   padding-top: 1em;
   padding-bottom: 1em;
