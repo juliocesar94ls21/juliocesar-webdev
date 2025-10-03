@@ -28,11 +28,11 @@ $(document).ready(function(){
   animateOnScroll('.exp3', 'animate__fadeInRight');
   animateOnScroll('.row-port', 'animate__fadeInUp');
   animateOnScroll('.content-item-blog', 'animate__fadeInUp');
+  animateOnScroll('.cs1', 'animate__fadeInUp');
+  animateOnScroll('.cs2', 'animate__fadeInUp');
+  animateOnScroll('.cs3', 'animate__fadeInUp');
+  animateOnScroll('.cs4', 'animate__fadeInUp');
 
-	createCanv("83%",0.83,0.17, document.getElementById("canvas1"));
-	createCanv("88%",0.88,0.12, document.getElementById("canvas2"));
-	createCanv("89%",0.89,0.11, document.getElementById("canvas3"));
-	createCanv("90%",0.90,0.10, document.getElementById("canvas4"));
 
 	$(".icons-close-portiflio-popup").on("click", function(){
 		$(".popup-fullscreen").fadeOut();
@@ -135,45 +135,158 @@ function isMobile(){
 	return $(window).outerWidth() < 768;
 }
 
-function createCanv(percent, decimal1, decimal2, elem){
-	const canvas = elem;
-  const ctx = canvas.getContext("2d");
+document.addEventListener('DOMContentLoaded', () => {
+  const wrappers = document.querySelectorAll('.wrap-canv');
 
-  const centerX = canvas.width / 2;
-  const centerY = canvas.height / 2;
-  const radius = 80;
-  const borderWidth = 4;
+  // Ajusta canvas para devicePixelRatio (evita ficar embaçado em telas retina)
+  function setupCanvas(canvas) {
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    // Se rect.width for 0 (por exemplo se o elemento estiver escondido), usamos atributos do canvas como fallback:
+    const cssWidth = rect.width || canvas.width;
+    const cssHeight = rect.height || canvas.height;
 
-  // Círculo de fundo com cor #212b36
-  ctx.beginPath();
-  ctx.arc(centerX, centerY, radius - borderWidth / 2, 0, 2 * Math.PI);
-  ctx.fillStyle = "#212b36";
-  ctx.fill();
+    canvas.width = Math.round(cssWidth * dpr);
+    canvas.height = Math.round(cssHeight * dpr);
+    canvas.style.width = cssWidth + 'px';
+    canvas.style.height = cssHeight + 'px';
 
-  // Arco verde (83%)
-  const startAngle = -0.5 * Math.PI;
-  const greenAngle = decimal1 * 2 * Math.PI;
-  ctx.beginPath();
-  ctx.arc(centerX, centerY, radius, startAngle, startAngle + greenAngle);
-  ctx.strokeStyle = "#41b548";
-  ctx.lineWidth = borderWidth;
-  ctx.stroke();
+    const ctx = canvas.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); // scale para desenhar considerando dpr
+    return ctx;
+  }
 
-  // Arco branco (17%)
-  const whiteAngle = decimal2 * 2 * Math.PI;
-  ctx.beginPath();
-  ctx.arc(centerX, centerY, radius, startAngle + greenAngle, startAngle + greenAngle + whiteAngle);
-  ctx.strokeStyle = "#ffffff";
-  ctx.lineWidth = borderWidth;
-  ctx.stroke();
+  // Função que anima um canvas de 0 até finalPercent (0..100)
+  function animateCanvas(canvas, finalPercent = 80, duration = 1200) {
+    if (canvas.dataset.animated) return; // evita repetir
+    canvas.dataset.animated = 'true';
 
-  // Texto central "83%"
-  ctx.font = "28px Arial";
-  ctx.fillStyle = "#ffffff";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText(percent, centerX, centerY);
-}
+    const ctx = canvas.getContext('2d');
+    const rect = canvas.getBoundingClientRect();
+    const width = rect.width || canvas.width;
+    const height = rect.height || canvas.height;
+    const centerX = width / 2;
+    const centerY = height / 2;
+    const radius = Math.min(width, height) / 2 - 12;
+    const borderWidth = 8;
+
+    const finalValue = Number(finalPercent);
+    const startTime = performance.now();
+
+    // easeOutCubic
+    const ease = t => 1 - Math.pow(1 - t, 3);
+
+    function draw(progress, value) {
+      ctx.clearRect(0, 0, width, height);
+
+      // Fundo
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, radius - borderWidth / 2, 0, 2 * Math.PI);
+      ctx.fillStyle = '#212b36';
+      ctx.fill();
+
+      // ângulo inicial
+      const startAngle = -0.5 * Math.PI;
+
+      // arco verde proporcional ao valor final (ex.: 83% => 0.83 do círculo)
+      const greenFrac = (finalValue / 100) * progress; // cresce com progress
+      const greenAngle = greenFrac * 2 * Math.PI;
+      ctx.beginPath();
+      ctx.lineCap = 'round';
+      ctx.arc(centerX, centerY, radius, startAngle, startAngle + greenAngle);
+      ctx.strokeStyle = '#41b548';
+      ctx.lineWidth = borderWidth;
+      ctx.stroke();
+
+      // arco branco para o restante (visual)
+      const whiteFrac = (1 - finalValue / 100) * progress;
+      const whiteAngle = whiteFrac * 2 * Math.PI;
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, radius, startAngle + greenAngle, startAngle + greenAngle + whiteAngle);
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = borderWidth;
+      ctx.stroke();
+
+      // texto central
+      ctx.font = Math.round(radius * 0.6) + 'px Arial';
+      ctx.fillStyle = '#ffffff';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(Math.round(value) + '%', centerX, centerY);
+    }
+
+    function frame(now) {
+      const elapsed = now - startTime;
+      const rawProgress = Math.min(elapsed / duration, 1);
+      const eased = ease(rawProgress);
+      const currentValue = eased * finalValue;
+
+      draw(eased, currentValue);
+
+      if (rawProgress < 1) {
+        requestAnimationFrame(frame);
+      } else {
+        draw(1, finalValue); // garante o estado final
+      }
+    }
+
+    requestAnimationFrame(frame);
+  }
+
+  // Inicializa os canvases (ajusta DPI e desenha 0%)
+  wrappers.forEach(w => {
+    const canvas = w.querySelector('canvas');
+    if (!canvas) return;
+    setupCanvas(canvas);
+
+    // desenho inicial 0%
+    const ctx = canvas.getContext('2d');
+    const rect = canvas.getBoundingClientRect();
+    const width = rect.width || canvas.width;
+    const height = rect.height || canvas.height;
+    const centerX = width / 2;
+    const centerY = height / 2;
+    const radius = Math.min(width, height) / 2 - 12;
+    const borderWidth = 8;
+
+    ctx.clearRect(0, 0, width, height);
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, radius - borderWidth / 2, 0, 2 * Math.PI);
+    ctx.fillStyle = '#212b36';
+    ctx.fill();
+    ctx.font = Math.round(radius * 0.6) + 'px Arial';
+    ctx.fillStyle = '#ffffff';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('0%', centerX, centerY);
+  });
+
+  // Observer: observa cada wrapper para disparar animação quando aparece na viewport
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const wrapper = entry.target;
+        const canvas = wrapper.querySelector('canvas');
+        if (!canvas) return;
+
+        // pega percent do data-percent, se não tiver usa fallback por id
+        let percent = canvas.dataset.percent;
+        if (!percent) {
+          const map = { canvas1: 83, canvas2: 90, canvas3: 75, canvas4: 70 };
+          percent = map[canvas.id] || 80;
+        }
+
+        animateCanvas(canvas, percent, 1200);
+        observer.unobserve(wrapper); // remover se quiser que aconteça só uma vez
+      }
+    });
+  }, {
+    threshold: 0.45 // quando ~45% do wrapper estiver visível dispara
+  });
+
+  // começa a observar os wrappers
+  wrappers.forEach(w => observer.observe(w));
+});
 
 $(window).on('load', function () {
     $(".overlaypt").remove();
