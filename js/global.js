@@ -97,11 +97,11 @@ $(document).ready(function(){
   });
 
   $(".port1 div:nth-child(3) div").on("click", function(){
-    poster.attr("src", "img/esg-tumb.png");
-    projectTitle.html("Website ESG Sustentável");
-    bread.html('<i class="fa-solid fa-calendar-days"></i> 08 de maio de 2025  <i class="fa-solid fa-user"></i> Hiago Akimoto');
-    textPost.html("Site desenvolvido para a ESG Sustentável, empresa focada em soluções ambientais, sociais e de governança corporativa. A plataforma apresenta de forma clara e profissional os serviços, projetos e valores da marca, com design moderno e responsivo. Pensado para transmitir credibilidade e compromisso com a sustentabilidade, o site é fácil de navegar em qualquer dispositivo. Inclui seções institucionais, portfólio de projetos e canais de contato direto. Um espaço digital alinhado aos princípios ESG e à inovação consciente.");
-    linkPort.attr("href", "https://esgsustentavel.vercel.app/");
+    poster.attr("src", "img/template-beauty-poster-portifolio.png");
+    projectTitle.html("Beauty Center Template");
+    bread.html('<i class="fa-solid fa-calendar-days"></i> 13 de outubro de 2025  <i class="fa-solid fa-user"></i> Júlio César');
+    textPost.html("Este site é um modelo de template feito em HTML5 e CSS3, meu intuito na criação deste template foi usar meus conhecimentos de design para elaborar uma página que fosse estéticamente bonita e que refletisse a marca fictícia e seus valores, usei cores, tipografias e imagens que refletisse a beleza, a vaidade e o bem-estar, o template esta disponível para uso livre sob uma licença não comercial da creative cummons.");
+    linkPort.attr("href", "https://beautycenter-teal.vercel.app/");
   });
 
   $(".port2 div:nth-child(1) div").on("click", function(){
@@ -113,11 +113,11 @@ $(document).ready(function(){
   });
 
   $(".port2 div:nth-child(2) div").on("click", function(){
-    poster.attr("src", "img/travels-tumb.png");
-    projectTitle.html("Template Travels");
-    bread.html('<i class="fa-solid fa-calendar-days"></i> 17 de agosto de 2025  <i class="fa-solid fa-user"></i> Júlio César');
-    textPost.html("Apresentamos o template exclusivo desenvolvido para a Travels, uma empresa fictícia de viagens criada para inspirar aventuras ao redor do mundo. Com design moderno, visual envolvente e totalmente responsivo, o layout foi pensado para destacar destinos, pacotes promocionais e experiências únicas.");
-    linkPort.attr("href", "https://travels-fulltemplate.vercel.app/");
+    poster.attr("src", "img/esg-tumb.png");
+    projectTitle.html("Website ESG Sustentável");
+    bread.html('<i class="fa-solid fa-calendar-days"></i> 08 de maio de 2025  <i class="fa-solid fa-user"></i> Hiago Akimoto');
+    textPost.html("Site desenvolvido para a ESG Sustentável, empresa focada em soluções ambientais, sociais e de governança corporativa. A plataforma apresenta de forma clara e profissional os serviços, projetos e valores da marca, com design moderno e responsivo. Pensado para transmitir credibilidade e compromisso com a sustentabilidade, o site é fácil de navegar em qualquer dispositivo. Inclui seções institucionais, portfólio de projetos e canais de contato direto. Um espaço digital alinhado aos princípios ESG e à inovação consciente.");
+    linkPort.attr("href", "https://esgsustentavel.vercel.app/");
   });
 
   $(".port2 div:nth-child(3) div").on("click", function(){
